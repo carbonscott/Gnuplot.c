@@ -27,15 +27,37 @@
 #include <stdlib.h>
 #include "gnuplot.h"
 
+#define GP(CMD) write_gp(gp, CMD)
+
 int
 main (void)
 {
   /* Initialize Gnuplot... */
   FILE * gp = init_gp();
 
+  /* Seed the random number */
+  srand(0);
+
+  /* Generate 500 random numbers ranging from -100 to 100... */
+  int len = 500;
+  int randoms [len];
+  for (int i = 0 ; i < len; ++i)
+    {
+      randoms[i] = rand() % 200 - 100;
+    }
+
   /* Plot sin(x) and cos(x) in Gnuplot... */
-  write_gp(gp, "plot sin(x), \\");
-  write_gp(gp, "     cos(x)");
+  GP("plot '-' using 1:2 with linespoints pointsize 2 linewidth 0.25 linecolor rgb 'blue',\\");
+  GP("");
+
+  for (int i = 0; i < len; ++i)
+    {
+      char cmd [100];
+      sprintf(cmd, "%d    %d", i, randoms[i]);
+      GP(cmd);
+    }
+  GP("e");
+
 
   /* Displaying Gnuplot window until any key press is accepted... */
   char anykey[2];
@@ -43,7 +65,8 @@ main (void)
   fgets(anykey, 2, stdin);
 
   /* Terminate Gnuplot... */
-  write_gp(gp, "exit");
+  // write_gp(gp, "exit");
+  GP("exit");
   close_gp(gp);
 
   return EXIT_SUCCESS;

@@ -26,7 +26,7 @@
 # For that, uncomment the following line and replace `/usr/lib` with
 # the directory where the library is located.
 #LIB= -I/usr/lib
-OPT= -O3
+OPT= -O3 -g
 
 gnuplot: main.c gnuplot.c
 										cc $(OPT) -o $@ $^
