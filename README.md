@@ -37,7 +37,7 @@ main (void)
       randoms[i] = rand() % 200 - 100;
     }
 
-  /* Plot sin(x) and cos(x) in Gnuplot... */
+  /* Data-driven plotting... */
   GP("plot '-' using 1:2 with linespoints pointsize 2 linewidth 0.25 linecolor rgb 'blue',\\");
   GP("");
 
