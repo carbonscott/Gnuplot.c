@@ -9,23 +9,58 @@ A minimal example is demonstrated in `main.c`.
 ```C
 write_gp(__gp_filehandler__, __gp_command__);
 ```
+It can be simplified using macro `#define GP(CMD) write_gp(gp, CMD)`.
 
-The following code snippet plots $sin(x)$ and $cos(x)$ in Gnuplot.  
+The following code snippet demonstrates a data-driven ploting.  
 
 ```C
-/* Initialize Gnuplot... */
-FILE * gp = init_gp();
+#include <stdio.h>
+#include <stdlib.h>
+#include "gnuplot.h"
 
-/* Plot sin(x) and cos(x) in Gnuplot... */
-write_gp(gp, "plot sin(x), \\");
-write_gp(gp, "     cos(x)");
+#define GP(CMD) write_gp(gp, CMD)
 
-/* Displaying Gnuplot window until any key press is accepted... */
-char anykey[2];
-printf("Press any key to exit...");
-fgets(anykey, 2, stdin);
+int
+main (void)
+{
+  /* Initialize Gnuplot... */
+  FILE * gp = init_gp();
 
-/* Terminate Gnuplot... */
-write_gp(gp, "exit");
-close_gp(gp);
+  /* Seed the random number */
+  srand(0);
+
+  /* Generate 500 random numbers ranging from -100 to 100... */
+  int len = 500;
+  int randoms [len];
+  for (int i = 0 ; i < len; ++i)
+    {
+      randoms[i] = rand() % 200 - 100;
+    }
+
+  /* Plot sin(x) and cos(x) in Gnuplot... */
+  GP("plot '-' using 1:2 with linespoints pointsize 2 linewidth 0.25 linecolor rgb 'blue',\\");
+  GP("");
+
+  for (int i = 0; i < len; ++i)
+    {
+      char cmd [100];
+      sprintf(cmd, "%d    %d", i, randoms[i]);
+      GP(cmd);
+    }
+  GP("e");
+
+
+  /* Displaying Gnuplot window until any key press is accepted... */
+  char anykey[2];
+  printf("Press any key to exit...");
+  fgets(anykey, 2, stdin);
+
+  /* Terminate Gnuplot... */
+  // write_gp(gp, "exit");
+  GP("exit");
+  close_gp(gp);
+
+  return EXIT_SUCCESS;
+}
+
 ```
