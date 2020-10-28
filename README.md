@@ -11,7 +11,7 @@ write_gp(__gp_filehandler__, __gp_command__);
 ```
 It can be simplified using macro `#define GP(CMD) write_gp(gp, CMD)`.
 
-The following code snippet demonstrates a data-driven ploting.  
+The following code snippet demonstrates a data-driven plotting.  
 
 ```C
 #include <stdio.h>
